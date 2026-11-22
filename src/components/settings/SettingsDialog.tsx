@@ -28,6 +28,7 @@ import {
   type ThemePreference,
 } from '../../services/settings.js'
 import { useTranslate, type TranslationKey, type TranslationMessage } from '../../i18n/index.js'
+import { isNativeApp, shareBlob } from '../../utils/native.js'
 import { Button } from '../base/Button.js'
 import { Modal } from '../base/Modal.js'
 import { Select } from '../base/Select.js'
@@ -524,12 +525,17 @@ const ExportHistory = ({ disabled }: { disabled: boolean }) => {
     setStatus(null)
     try {
       const { name, blob } = await exportHistory()
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = name
-      link.click()
-      setTimeout(() => URL.revokeObjectURL(url), 10_000)
+      if (isNativeApp()) {
+        // Android WebView 无法用 <a download> 保存文件，改为调起系统分享面板
+        await shareBlob(blob, name)
+      } else {
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = name
+        link.click()
+        setTimeout(() => URL.revokeObjectURL(url), 10_000)
+      }
     } catch (error) {
       setStatus(errorStatus('historyExportFailed', error))
     } finally {

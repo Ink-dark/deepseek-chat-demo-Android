@@ -27,6 +27,17 @@ pnpm build
 
 产物位于 `dist/`，可部署到静态服务器，也可直接打开 `dist/index.html`。直接打开时，浏览器和 API 服务需允许 `file://` 页面的存储与跨域请求。
 
+## Android 应用
+
+同一套 Web 产物通过 [Capacitor](https://capacitorjs.com/) 打包为 Android 应用，原生工程位于 `android/`。需要 JDK 21 和 Android SDK 36（设置 `ANDROID_HOME`），然后执行：
+
+```sh
+pnpm install
+pnpm android:build
+```
+
+调试包输出到 `android/app/build/outputs/apk/debug/app-debug.apk`。可用 `adb install -r <apk>` 安装，或把 APK 复制到手机上打开安装（需允许安装未知来源应用）。API Key、设置和会话保存在应用自身 WebView 的本地存储中，与浏览器相互独立。
+
 ## 功能
 
 - 多会话、自动标题、重命名与删除；编辑提问、重新生成和切换消息分支。

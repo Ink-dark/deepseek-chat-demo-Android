@@ -27,6 +27,17 @@ pnpm build
 
 The output is written to `dist/`. Deploy it to a static web server or open `dist/index.html` directly. Opening the file directly requires browser support for storage on `file://` pages and an API service that permits their cross-origin requests.
 
+## Android app
+
+The same web build is packaged as an Android app with [Capacitor](https://capacitorjs.com/). The native project is in `android/`. You need JDK 21 and Android SDK 36 with `ANDROID_HOME` set, then run:
+
+```sh
+pnpm install
+pnpm android:build
+```
+
+The debug APK is written to `android/app/build/outputs/apk/debug/app-debug.apk`. Install it with `adb install -r <apk>`, or copy it to the phone and open it (allow installing from unknown sources). API keys, settings, and chats are stored in the app's own WebView storage, separate from the browser.
+
 ## Features
 
 - Multiple conversations with automatic titles, renaming, and deletion; edit prompts, regenerate replies, and switch between message branches.
